@@ -23,16 +23,15 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.greendreamlimited.newsviewsv2.Models.NewsSource.Article;
 import com.greendreamlimited.newsviewsv2.R;
-import com.greendreamlimited.newsviewsv2.interfaces.ItemClickListener;
+import com.greendreamlimited.newsviewsv2.interfaces.OnItemClickListener;
 import com.greendreamlimited.newsviewsv2.utils.Utils;
 
 import java.util.List;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-
 public class NewsViewAdapter extends RecyclerView.Adapter<NewsViewAdapter.NewsViewHolder> {
     private Context context;
     private List<Article> articleList;
+    private OnItemClickListener onItemClickListener;
 
     public NewsViewAdapter(Context context, List<Article> articleList) {
         this.context = context;
@@ -43,7 +42,7 @@ public class NewsViewAdapter extends RecyclerView.Adapter<NewsViewAdapter.NewsVi
     @Override
     public NewsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_news, parent, false);
-        return new NewsViewHolder(view);
+        return new NewsViewHolder(view, onItemClickListener);
     }
 
     @Override
@@ -88,13 +87,19 @@ public class NewsViewAdapter extends RecyclerView.Adapter<NewsViewAdapter.NewsVi
         return articleList.size();
     }
 
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
+
+
     public class NewsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        ItemClickListener itemClickListener;
+
         ImageView imageView;
         TextView tvTitle, tvDesc, tvAuthor, tvPublish, tvSource;
         ProgressBar progressBar;
+        OnItemClickListener onItemClickListener;
 
-        public NewsViewHolder(View itemView) {
+        public NewsViewHolder(View itemView, OnItemClickListener onItemClickListener) {
             super(itemView);
             itemView.setOnClickListener(this);
             imageView = itemView.findViewById(R.id.iv_img);
@@ -103,17 +108,15 @@ public class NewsViewAdapter extends RecyclerView.Adapter<NewsViewAdapter.NewsVi
             tvAuthor = itemView.findViewById(R.id.tv_news_author);
             tvPublish = itemView.findViewById(R.id.tv_publish_date);
             tvSource = itemView.findViewById(R.id.tv_source);
-           // tvTime = itemView.findViewById(R.id.tv_time);
+            // tvTime = itemView.findViewById(R.id.tv_time);
             progressBar = itemView.findViewById(R.id.progress_load_photo);
-        }
-
-        public void setItemClickListener(ItemClickListener itemClickListener) {
-            this.itemClickListener = itemClickListener;
+            this.onItemClickListener = onItemClickListener;
         }
 
         @Override
         public void onClick(View view) {
-            itemClickListener.onClick(view, getAdapterPosition(), false);
+            onItemClickListener.onItemClick(view, getAdapterPosition());
         }
+
     }
 }
