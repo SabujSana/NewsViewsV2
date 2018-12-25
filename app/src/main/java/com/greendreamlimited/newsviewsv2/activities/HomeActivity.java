@@ -1,24 +1,24 @@
 package com.greendreamlimited.newsviewsv2.activities;
 
+import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.util.TypedValue;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.Toast;
 
 import com.greendreamlimited.newsviewsv2.Models.NewsSource.Article;
@@ -45,7 +45,7 @@ public class HomeActivity extends AppCompatActivity implements SwipeRefreshLayou
     private NewsViewAdapter newsViewAdapter;
     private String TAG = HomeActivity.class.getSimpleName();
     private SwipeRefreshLayout swipeRefreshLayout;
-    private Adapter adapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,13 +107,38 @@ public class HomeActivity extends AppCompatActivity implements SwipeRefreshLayou
     private void initListener() {
         newsViewAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onItemClick(View view, int position) {
-                Intent intent = new Intent(HomeActivity.this, DetailsNewsActivity.class);
-                Article article = articleList.get(position);
-                intent.putExtra("url", article.getUrl());
-                startActivity(intent);
+            public void onItemClick(View view, final int position) {
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(HomeActivity.this);
+                alertDialogBuilder.setMessage("Do you want to use phone browser")
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                sendUrlToGetDetailsNews(position);
+                            }
+                        })
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                loadBrowser(position);
+                            }
+                        })
+                        .create()
+                        .show();
             }
         });
+    }
+
+    private void loadBrowser(int position) {
+        Article article = articleList.get(position);
+        Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(article.getUrl()));
+        startActivity(intent);
+    }
+
+    private void sendUrlToGetDetailsNews(int position) {
+        Intent intent = new Intent(HomeActivity.this, DetailsNewsActivity.class);
+        Article article = articleList.get(position);
+        intent.putExtra("url", article.getUrl());
+        startActivity(intent);
     }
 
     @Override
