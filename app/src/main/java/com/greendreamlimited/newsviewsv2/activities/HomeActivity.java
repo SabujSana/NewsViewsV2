@@ -37,14 +37,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class HomeActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
-    public static final String API_KEY = "6cc1938921a24360a9f10b2b2eccf4ef";
-    private RecyclerView recyclerView;
-    private RecyclerView.LayoutManager layoutManager;
-    private List<Article> articleList = new ArrayList<>();
-    private NewsViewAdapter newsViewAdapter;
-    private String TAG = HomeActivity.class.getSimpleName();
-    private SwipeRefreshLayout swipeRefreshLayout;
+public class HomeActivity extends AppCompatActivity {
+//    public static final String API_KEY = "6cc1938921a24360a9f10b2b2eccf4ef";
+//    private RecyclerView recyclerView;
+//    private RecyclerView.LayoutManager layoutManager;
+//    private List<Article> articleList = new ArrayList<>();
+//    private NewsViewAdapter newsViewAdapter;
+//    private String TAG = HomeActivity.class.getSimpleName();
+//    private SwipeRefreshLayout swipeRefreshLayout;
 
 
     @Override
@@ -52,18 +52,18 @@ public class HomeActivity extends AppCompatActivity implements SwipeRefreshLayou
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
-        swipeRefreshLayout.setOnRefreshListener(this);
-        swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
+//        swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
+//        swipeRefreshLayout.setOnRefreshListener(this);
+//        swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
 
-        recyclerView = findViewById(R.id.rv_news_list);
-        layoutManager = new GridLayoutManager(HomeActivity.this, 2);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setNestedScrollingEnabled(false);
+//        recyclerView = findViewById(R.id.rv_news_list);
+//        layoutManager = new GridLayoutManager(HomeActivity.this, 2);
+//        recyclerView.setLayoutManager(layoutManager);
+//        recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
+//        recyclerView.setItemAnimator(new DefaultItemAnimator());
+//        recyclerView.setNestedScrollingEnabled(false);
 
-        onLoadingSwipeRefresh("");
+       // onLoadingSwipeRefresh("");
 
     }
 
@@ -72,123 +72,123 @@ public class HomeActivity extends AppCompatActivity implements SwipeRefreshLayou
         return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, resources.getDisplayMetrics()));
     }
 
-    public void LoadNews(final String keyword) {
-        swipeRefreshLayout.setRefreshing(true);
-        final NewsApiInterface apiInterface = RetrofitClient.getClient().create(NewsApiInterface.class);
-        String country = Utils.getCountry();
-        Call<NewsSource> call = apiInterface.getNews(country, API_KEY);
-        call.enqueue(new Callback<NewsSource>() {
-            @Override
-            public void onResponse(Call<NewsSource> call, Response<NewsSource> response) {
-                if (response.isSuccessful() && response.body().getArticles() != null) {
-                    if (!articleList.isEmpty()) {
-                        articleList.clear();
-                    }
-                    articleList = response.body().getArticles();
-                    newsViewAdapter = new NewsViewAdapter(HomeActivity.this, articleList);
-                    recyclerView.setAdapter(newsViewAdapter);
-                    newsViewAdapter.notifyDataSetChanged();
-                    initListener();
-                    swipeRefreshLayout.setRefreshing(false);
-                } else {
-                    swipeRefreshLayout.setRefreshing(false);
-                    Toast.makeText(HomeActivity.this, "No results found", Toast.LENGTH_SHORT).show();
-                }
-            }
+//    public void LoadNews(final String keyword) {
+//        swipeRefreshLayout.setRefreshing(true);
+//        final NewsApiInterface apiInterface = RetrofitClient.getClient().create(NewsApiInterface.class);
+//        String country = Utils.getCountry();
+//        Call<NewsSource> call = apiInterface.getNews(country, API_KEY);
+//        call.enqueue(new Callback<NewsSource>() {
+//            @Override
+//            public void onResponse(Call<NewsSource> call, Response<NewsSource> response) {
+//                if (response.isSuccessful() && response.body().getArticles() != null) {
+//                    if (!articleList.isEmpty()) {
+//                        articleList.clear();
+//                    }
+//                    articleList = response.body().getArticles();
+//                    newsViewAdapter = new NewsViewAdapter(HomeActivity.this, articleList);
+//                    recyclerView.setAdapter(newsViewAdapter);
+//                    newsViewAdapter.notifyDataSetChanged();
+//                    initListener();
+//                    swipeRefreshLayout.setRefreshing(false);
+//                } else {
+//                    swipeRefreshLayout.setRefreshing(false);
+//                    Toast.makeText(HomeActivity.this, "No results found", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<NewsSource> call, Throwable t) {
+//                swipeRefreshLayout.setRefreshing(false);
+//            }
+//        });
+//
+//    }
 
-            @Override
-            public void onFailure(Call<NewsSource> call, Throwable t) {
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        });
+//    private void initListener() {
+//        newsViewAdapter.setOnItemClickListener(new OnItemClickListener() {
+//            @Override
+//            public void onItemClick(View view, final int position) {
+//                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(HomeActivity.this);
+//                alertDialogBuilder.setMessage("Do you want to use phone browser")
+//                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                sendUrlToGetDetailsNews(position);
+//                            }
+//                        })
+//                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                loadBrowser(position);
+//                            }
+//                        })
+//                        .create()
+//                        .show();
+//            }
+//        });
+//    }
 
-    }
+//    private void loadBrowser(int position) {
+//        Article article = articleList.get(position);
+//        Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(article.getUrl()));
+//        startActivity(intent);
+//    }
+//
+//    private void sendUrlToGetDetailsNews(int position) {
+//        Intent intent = new Intent(HomeActivity.this, DetailsNewsActivity.class);
+//        Article article = articleList.get(position);
+//        intent.putExtra("url", article.getUrl());
+//        startActivity(intent);
+//    }
+//
+//    @Override
+//    public void onRefresh() {
+//        LoadNews("");
+//    }
 
-    private void initListener() {
-        newsViewAdapter.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, final int position) {
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(HomeActivity.this);
-                alertDialogBuilder.setMessage("Do you want to use phone browser")
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                sendUrlToGetDetailsNews(position);
-                            }
-                        })
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                loadBrowser(position);
-                            }
-                        })
-                        .create()
-                        .show();
-            }
-        });
-    }
+//    private void onLoadingSwipeRefresh(final String keyword) {
+//        swipeRefreshLayout.post(
+//                new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        LoadNews(keyword);
+//                    }
+//                }
+//        );
+//    }
 
-    private void loadBrowser(int position) {
-        Article article = articleList.get(position);
-        Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(article.getUrl()));
-        startActivity(intent);
-    }
-
-    private void sendUrlToGetDetailsNews(int position) {
-        Intent intent = new Intent(HomeActivity.this, DetailsNewsActivity.class);
-        Article article = articleList.get(position);
-        intent.putExtra("url", article.getUrl());
-        startActivity(intent);
-    }
-
-    @Override
-    public void onRefresh() {
-        LoadNews("");
-    }
-
-    private void onLoadingSwipeRefresh(final String keyword) {
-        swipeRefreshLayout.post(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        LoadNews(keyword);
-                    }
-                }
-        );
-    }
-
-    public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
-        private int spanCount;
-        private int spacing;
-        private boolean includeEdge;
-
-        public GridSpacingItemDecoration(int spanCount, int spacing, boolean includeEdge) {
-            this.spanCount = spanCount;
-            this.spacing = spacing;
-            this.includeEdge = includeEdge;
-        }
-
-        @Override
-        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-            int position = parent.getChildAdapterPosition(view);
-            int column = position % spanCount;
-            if (includeEdge) {
-                outRect.left = spacing - column * spacing / spanCount;
-                outRect.right = (column + 1) * spacing / spanCount;
-
-                if (position < spanCount) {
-                    outRect.top = spacing;
-                }
-                outRect.bottom = spacing;
-            } else {
-                outRect.left = column * spacing / spanCount;
-                outRect.right = spacing - (column + 1) * spacing / spanCount;
-                if (position >= spanCount) {
-                    outRect.top = spacing;
-                }
-            }
-        }
-    }
+//    public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
+//        private int spanCount;
+//        private int spacing;
+//        private boolean includeEdge;
+//
+//        public GridSpacingItemDecoration(int spanCount, int spacing, boolean includeEdge) {
+//            this.spanCount = spanCount;
+//            this.spacing = spacing;
+//            this.includeEdge = includeEdge;
+//        }
+//
+//        @Override
+//        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+//            int position = parent.getChildAdapterPosition(view);
+//            int column = position % spanCount;
+//            if (includeEdge) {
+//                outRect.left = spacing - column * spacing / spanCount;
+//                outRect.right = (column + 1) * spacing / spanCount;
+//
+//                if (position < spanCount) {
+//                    outRect.top = spacing;
+//                }
+//                outRect.bottom = spacing;
+//            } else {
+//                outRect.left = column * spacing / spanCount;
+//                outRect.right = spacing - (column + 1) * spacing / spanCount;
+//                if (position >= spanCount) {
+//                    outRect.top = spacing;
+//                }
+//            }
+//        }
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
