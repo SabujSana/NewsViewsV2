@@ -3,123 +3,111 @@ package com.greendreamlimited.newsviewsv2.activities;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
 import android.support.v7.widget.SearchView;
-import android.util.TypedValue;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.widget.Toast;
 
 import com.greendreamlimited.newsviewsv2.R;
+import com.greendreamlimited.newsviewsv2.adapters.MenuAdapter;
 import com.greendreamlimited.newsviewsv2.fragments.AboutFragment;
 import com.greendreamlimited.newsviewsv2.fragments.HomeFragment;
-import com.shrikanthravi.customnavigationdrawer2.data.MenuItem;
-import com.shrikanthravi.customnavigationdrawer2.widget.SNavigationDrawer;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
-public class HomeActivity extends AppCompatActivity {
-    SNavigationDrawer sNavigationDrawer;
-    int color1 = 0;
-    Class fragmentClass;
-    public static Fragment fragment;
+import nl.psdcompany.duonavigationdrawer.views.DuoDrawerLayout;
+import nl.psdcompany.duonavigationdrawer.views.DuoMenuView;
+import nl.psdcompany.duonavigationdrawer.widgets.DuoDrawerToggle;
 
+
+public class HomeActivity extends AppCompatActivity implements DuoMenuView.OnMenuClickListener {
+    private MenuAdapter mMenuAdapter;
+    private ViewHolder mViewHolder;
+    public ArrayList<String> mTitles = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().hide();
+        mTitles = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.menuOptions)));
+
+        mViewHolder = new ViewHolder();
+        handleToolbar();
+        handleMenu();
+        handleDrawer();
+
+        goToFragment(new HomeFragment(), false);
+        mMenuAdapter.setViewSelected(0, true);
+        setTitle(mTitles.get(0));
+    }
+
+    private void goToFragment(Fragment fragment, boolean addToBackStack) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        if (addToBackStack) {
+            transaction.addToBackStack(null);
         }
+        transaction.replace(R.id.main_frame, fragment).commit();
+    }
 
+    private void handleDrawer() {
+        DuoDrawerToggle duoDrawerToggle = new DuoDrawerToggle(
+                this,
+                mViewHolder.mDuoDrawerLayout,
+                mViewHolder.mToolbar,
+                R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close
+        );
+        mViewHolder.mDuoDrawerLayout.setDrawerListener(duoDrawerToggle);
+        duoDrawerToggle.syncState();
+    }
 
-        sNavigationDrawer = findViewById(R.id.navigationDrawer);
-        List<MenuItem> menuItemList = new ArrayList<>();
-        menuItemList.add(new MenuItem("Home", R.drawable.ic_home));
-        menuItemList.add(new MenuItem("About", R.drawable.ic_about));
-        menuItemList.add(new MenuItem("Exit", R.drawable.ic_exit));
-        sNavigationDrawer.setMenuItemList(menuItemList);
+    private void handleMenu() {
+        mMenuAdapter = new MenuAdapter(mTitles);
 
-        fragmentClass = HomeFragment.class;
+        mViewHolder.mDuoMenuView.setOnMenuClickListener(this);
+        mViewHolder.mDuoMenuView.setAdapter(mMenuAdapter);
+    }
 
-        try {
-            fragment = (Fragment) fragmentClass.newInstance();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
+    private void handleToolbar() {
+        setSupportActionBar(mViewHolder.mToolbar);
+    }
+
+    @Override
+    public void onFooterClicked() {
+        Toast.makeText(this, "onFooterClicked", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onHeaderClicked() {
+        Toast.makeText(this, "onHeaderClicked", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onOptionClicked(int position, Object objectClicked) {
+        setTitle(mTitles.get(position));
+        mMenuAdapter.setViewSelected(position, true);
+        switch (position) {
+            case 0:
+                goToFragment(new HomeFragment(), false);
+                break;
+            case 1:
+                goToFragment(new AboutFragment(), false);
+                break;
+            case 2:
+                exitFromApp();
+                break;
+                default:
+                    Toast.makeText(this, String.valueOf(position) , Toast.LENGTH_SHORT).show();
+                    break;
         }
-
-        if (fragment != null) {
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().setCustomAnimations(android.R.animator.fade_in,
-                    android.R.animator.fade_out)
-                    .replace(R.id.frameLayout, fragment)
-                    .commit();
-        }
-
-        sNavigationDrawer.setOnMenuItemClickListener(new SNavigationDrawer.OnMenuItemClickListener() {
-            @Override
-            public void onMenuItemClicked(int position) {
-                switch (position) {
-                    case 0:
-                        color1 = R.color.home;
-                        fragmentClass = HomeFragment.class;
-                        break;
-                    case 1:
-                        color1 = R.color.about;
-                        fragmentClass = AboutFragment.class;
-                        break;
-                    case 2:
-                        exitFromApp();
-                        break;
-                }
-            }
-        });
-
-        sNavigationDrawer.setDrawerListener(new SNavigationDrawer.DrawerListener() {
-            @Override
-            public void onDrawerOpening() {
-
-            }
-
-            @Override
-            public void onDrawerClosing() {
-                try {
-                    fragment = (Fragment) fragmentClass.newInstance();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                if (fragment != null) {
-                    FragmentManager fragmentManager = getSupportFragmentManager();
-                    fragmentManager.beginTransaction().setCustomAnimations(
-                            android.R.animator.fade_in, android.R.animator.fade_out
-                    ).replace(R.id.frameLayout, fragment).commit();
-                }
-            }
-
-            @Override
-            public void onDrawerOpened() {
-
-            }
-
-            @Override
-            public void onDrawerClosed() {
-
-            }
-
-            @Override
-            public void onDrawerStateChanged(int i) {
-
-            }
-        });
-
-
+        mViewHolder.mDuoDrawerLayout.closeDrawer();
     }
 
     private void exitFromApp() {
@@ -131,7 +119,17 @@ public class HomeActivity extends AppCompatActivity {
         System.exit(0);
     }
 
+    private class ViewHolder {
+        private DuoDrawerLayout mDuoDrawerLayout;
+        private DuoMenuView mDuoMenuView;
+        private Toolbar mToolbar;
 
+        ViewHolder() {
+            mDuoDrawerLayout = findViewById(R.id.drawer);
+            mDuoMenuView = (DuoMenuView) mDuoDrawerLayout.getMenuView();
+            mToolbar = findViewById(R.id.toolbar);
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

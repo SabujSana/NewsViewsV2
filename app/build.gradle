@@ -37,5 +37,5 @@ dependencies {
     implementation 'com.github.d-max:spots-dialog:1.1@aar'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'org.ocpsoft.prettytime:prettytime:4.0.1.Final'
-    implementation 'com.github.shrikanth7698:Custom-Navigation-Drawer:v0.0.1'
+    implementation  'nl.psdcompany:duo-navigation-drawer:2.0.8'
 }

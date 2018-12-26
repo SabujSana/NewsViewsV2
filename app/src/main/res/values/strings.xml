@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">NewsViewsV2</string>
+
+    <array name="menuOptions">
+        <item>Home</item>
+        <item>About</item>
+        <item>Exit</item>
+    </array>
 </resources>
