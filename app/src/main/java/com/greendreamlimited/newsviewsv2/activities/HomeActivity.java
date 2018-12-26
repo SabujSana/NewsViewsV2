@@ -1,50 +1,31 @@
 package com.greendreamlimited.newsviewsv2.activities;
 
-import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Rect;
-import android.net.Uri;
-import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.util.TypedValue;
 import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.Toast;
 
-import com.greendreamlimited.newsviewsv2.Models.NewsSource.Article;
-import com.greendreamlimited.newsviewsv2.Models.NewsSource.NewsSource;
 import com.greendreamlimited.newsviewsv2.R;
-import com.greendreamlimited.newsviewsv2.adapters.NewsViewAdapter;
-import com.greendreamlimited.newsviewsv2.api.NewsApiInterface;
-import com.greendreamlimited.newsviewsv2.api.RetrofitClient;
-import com.greendreamlimited.newsviewsv2.interfaces.OnItemClickListener;
-import com.greendreamlimited.newsviewsv2.utils.Utils;
+import com.greendreamlimited.newsviewsv2.fragments.AboutFragment;
+import com.greendreamlimited.newsviewsv2.fragments.HomeFragment;
+import com.shrikanthravi.customnavigationdrawer2.data.MenuItem;
+import com.shrikanthravi.customnavigationdrawer2.widget.SNavigationDrawer;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 public class HomeActivity extends AppCompatActivity {
-//    public static final String API_KEY = "6cc1938921a24360a9f10b2b2eccf4ef";
-//    private RecyclerView recyclerView;
-//    private RecyclerView.LayoutManager layoutManager;
-//    private List<Article> articleList = new ArrayList<>();
-//    private NewsViewAdapter newsViewAdapter;
-//    private String TAG = HomeActivity.class.getSimpleName();
-//    private SwipeRefreshLayout swipeRefreshLayout;
+    SNavigationDrawer sNavigationDrawer;
+    int color1 = 0;
+    Class fragmentClass;
+    public static Fragment fragment;
 
 
     @Override
@@ -52,150 +33,112 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-//        swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
-//        swipeRefreshLayout.setOnRefreshListener(this);
-//        swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
 
-//        recyclerView = findViewById(R.id.rv_news_list);
-//        layoutManager = new GridLayoutManager(HomeActivity.this, 2);
-//        recyclerView.setLayoutManager(layoutManager);
-//        recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
-//        recyclerView.setItemAnimator(new DefaultItemAnimator());
-//        recyclerView.setNestedScrollingEnabled(false);
 
-       // onLoadingSwipeRefresh("");
+        sNavigationDrawer = findViewById(R.id.navigationDrawer);
+        List<MenuItem> menuItemList = new ArrayList<>();
+        menuItemList.add(new MenuItem("Home", R.drawable.ic_home));
+        menuItemList.add(new MenuItem("About", R.drawable.ic_about));
+        menuItemList.add(new MenuItem("Exit", R.drawable.ic_exit));
+        sNavigationDrawer.setMenuItemList(menuItemList);
+
+        fragmentClass = HomeFragment.class;
+
+        try {
+            fragment = (Fragment) fragmentClass.newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        if (fragment != null) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().setCustomAnimations(android.R.animator.fade_in,
+                    android.R.animator.fade_out)
+                    .replace(R.id.frameLayout, fragment)
+                    .commit();
+        }
+
+        sNavigationDrawer.setOnMenuItemClickListener(new SNavigationDrawer.OnMenuItemClickListener() {
+            @Override
+            public void onMenuItemClicked(int position) {
+                switch (position) {
+                    case 0:
+                        color1 = R.color.home;
+                        fragmentClass = HomeFragment.class;
+                        break;
+                    case 1:
+                        color1 = R.color.about;
+                        fragmentClass = AboutFragment.class;
+                        break;
+                    case 2:
+                        exitFromApp();
+                        break;
+                }
+            }
+        });
+
+        sNavigationDrawer.setDrawerListener(new SNavigationDrawer.DrawerListener() {
+            @Override
+            public void onDrawerOpening() {
+
+            }
+
+            @Override
+            public void onDrawerClosing() {
+                try {
+                    fragment = (Fragment) fragmentClass.newInstance();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if (fragment != null) {
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    fragmentManager.beginTransaction().setCustomAnimations(
+                            android.R.animator.fade_in, android.R.animator.fade_out
+                    ).replace(R.id.frameLayout, fragment).commit();
+                }
+            }
+
+            @Override
+            public void onDrawerOpened() {
+
+            }
+
+            @Override
+            public void onDrawerClosed() {
+
+            }
+
+            @Override
+            public void onDrawerStateChanged(int i) {
+
+            }
+        });
+
 
     }
 
-    private int dpToPx(int dp) {
-        Resources resources = getResources();
-        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, resources.getDisplayMetrics()));
+    private void exitFromApp() {
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
+        System.exit(0);
     }
 
-//    public void LoadNews(final String keyword) {
-//        swipeRefreshLayout.setRefreshing(true);
-//        final NewsApiInterface apiInterface = RetrofitClient.getClient().create(NewsApiInterface.class);
-//        String country = Utils.getCountry();
-//        Call<NewsSource> call = apiInterface.getNews(country, API_KEY);
-//        call.enqueue(new Callback<NewsSource>() {
-//            @Override
-//            public void onResponse(Call<NewsSource> call, Response<NewsSource> response) {
-//                if (response.isSuccessful() && response.body().getArticles() != null) {
-//                    if (!articleList.isEmpty()) {
-//                        articleList.clear();
-//                    }
-//                    articleList = response.body().getArticles();
-//                    newsViewAdapter = new NewsViewAdapter(HomeActivity.this, articleList);
-//                    recyclerView.setAdapter(newsViewAdapter);
-//                    newsViewAdapter.notifyDataSetChanged();
-//                    initListener();
-//                    swipeRefreshLayout.setRefreshing(false);
-//                } else {
-//                    swipeRefreshLayout.setRefreshing(false);
-//                    Toast.makeText(HomeActivity.this, "No results found", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<NewsSource> call, Throwable t) {
-//                swipeRefreshLayout.setRefreshing(false);
-//            }
-//        });
-//
-//    }
 
-//    private void initListener() {
-//        newsViewAdapter.setOnItemClickListener(new OnItemClickListener() {
-//            @Override
-//            public void onItemClick(View view, final int position) {
-//                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(HomeActivity.this);
-//                alertDialogBuilder.setMessage("Do you want to use phone browser")
-//                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                sendUrlToGetDetailsNews(position);
-//                            }
-//                        })
-//                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                loadBrowser(position);
-//                            }
-//                        })
-//                        .create()
-//                        .show();
-//            }
-//        });
-//    }
-
-//    private void loadBrowser(int position) {
-//        Article article = articleList.get(position);
-//        Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(article.getUrl()));
-//        startActivity(intent);
-//    }
-//
-//    private void sendUrlToGetDetailsNews(int position) {
-//        Intent intent = new Intent(HomeActivity.this, DetailsNewsActivity.class);
-//        Article article = articleList.get(position);
-//        intent.putExtra("url", article.getUrl());
-//        startActivity(intent);
-//    }
-//
-//    @Override
-//    public void onRefresh() {
-//        LoadNews("");
-//    }
-
-//    private void onLoadingSwipeRefresh(final String keyword) {
-//        swipeRefreshLayout.post(
-//                new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        LoadNews(keyword);
-//                    }
-//                }
-//        );
-//    }
-
-//    public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
-//        private int spanCount;
-//        private int spacing;
-//        private boolean includeEdge;
-//
-//        public GridSpacingItemDecoration(int spanCount, int spacing, boolean includeEdge) {
-//            this.spanCount = spanCount;
-//            this.spacing = spacing;
-//            this.includeEdge = includeEdge;
-//        }
-//
-//        @Override
-//        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-//            int position = parent.getChildAdapterPosition(view);
-//            int column = position % spanCount;
-//            if (includeEdge) {
-//                outRect.left = spacing - column * spacing / spanCount;
-//                outRect.right = (column + 1) * spacing / spanCount;
-//
-//                if (position < spanCount) {
-//                    outRect.top = spacing;
-//                }
-//                outRect.bottom = spacing;
-//            } else {
-//                outRect.left = column * spacing / spanCount;
-//                outRect.right = spacing - (column + 1) * spacing / spanCount;
-//                if (position >= spanCount) {
-//                    outRect.top = spacing;
-//                }
-//            }
-//        }
-//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.home_menu, menu);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
-        MenuItem searchMenuItem = menu.findItem(R.id.action_search);
+        android.view.MenuItem searchMenuItem = menu.findItem(R.id.action_search);
 
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setQueryHint("Search Latest News.....");
