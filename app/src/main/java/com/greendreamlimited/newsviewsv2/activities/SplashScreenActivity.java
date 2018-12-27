@@ -1,12 +1,14 @@
 package com.greendreamlimited.newsviewsv2.activities;
 
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.greendreamlimited.newsviewsv2.R;
 
 public class SplashScreenActivity extends AppCompatActivity {
-
+private ViewPager viewPager;
+private MyVi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
