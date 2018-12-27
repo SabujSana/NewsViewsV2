@@ -21,7 +21,8 @@
         <activity
             android:name=".activities.DetailsNewsActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activities.LoginActivity"></activity>
+        <activity android:name=".activities.LoginActivity" />
+        <activity android:name=".activities.SplashScreenActivity"></activity>
     </application>
 
 </manifest>
