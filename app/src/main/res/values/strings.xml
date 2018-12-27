@@ -1,9 +1,22 @@
 <resources>
     <string name="app_name">NewsViewsV2</string>
-
+    <string name="next">NEXT</string>
+    <string name="skip">SKIP</string>
+    <string name="start">GOT IT</string>
     <array name="menuOptions">
         <item>Home</item>
         <item>About</item>
         <item>Exit</item>
+    </array>
+    <array name="array_dot_active">
+        <item>@color/dot_light_screen1</item>
+        <item>@color/dot_light_screen1</item>
+        <item>@color/dot_light_screen1</item>
+    </array>
+
+    <array name="array_dot_inactive">
+        <item>@color/dot_dark_screen1</item>
+        <item>@color/dot_dark_screen1</item>
+        <item>@color/dot_dark_screen1</item>
     </array>
 </resources>

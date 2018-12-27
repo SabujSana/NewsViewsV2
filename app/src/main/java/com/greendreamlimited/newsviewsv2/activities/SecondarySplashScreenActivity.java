@@ -13,11 +13,12 @@ public class SecondarySplashScreenActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_secondary_splash_screen);
 
+        preferenceManager = new SharedPreferenceManager(this);
         if (preferenceManager.isFirstTimeLaunch()) {
-          startActivity(new Intent(SecondarySplashScreenActivity.this,SplashScreenActivity.class));
-          finish();
+            startActivity(new Intent(SecondarySplashScreenActivity.this, SplashScreenActivity.class));
+            finish();
         }
+        setContentView(R.layout.activity_secondary_splash_screen);
     }
 }
