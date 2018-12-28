@@ -5,6 +5,10 @@
     <string name="start">FINISH</string>
     <string name="facebook_app_id">188116275367220</string>
     <string name="fb_login_protocol_scheme">fb188116275367220</string>
+    <string name="text_splash_screen1">I am Md. Sabuj Sana</string>
+    <string name="text_splash_screen2">Graduated From Pabna University of Science and Technology</string>
+    <string name="text_splash_screen3">Now Developing android Mobile Apps</string>
+    <string name="newsviews">NewsViews</string>
 
     <array name="menuOptions">
         <item>Home</item>
