@@ -9,7 +9,7 @@
     <string name="text_splash_screen2">Graduated From Pabna University of Science and Technology</string>
     <string name="text_splash_screen3">Now Developing android Mobile Apps</string>
     <string name="newsviews">NewsViews</string>
-
+    <string name="animated_rainbow_span">Animated rainbow span</string>
     <array name="menuOptions">
         <item>Home</item>
         <item>About</item>
