@@ -2,7 +2,10 @@
     <string name="app_name">NewsViewsV2</string>
     <string name="next">NEXT</string>
     <string name="skip">SKIP</string>
-    <string name="start">GOT IT</string>
+    <string name="start">FINISH</string>
+    <string name="facebook_app_id">188116275367220</string>
+    <string name="fb_login_protocol_scheme">fb188116275367220</string>
+
     <array name="menuOptions">
         <item>Home</item>
         <item>About</item>
