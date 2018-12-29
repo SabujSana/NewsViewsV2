@@ -44,6 +44,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+    private static final String BASE_URL_NEWS = "https://newsapi.org/v2/";
     public static final String API_KEY = "6cc1938921a24360a9f10b2b2eccf4ef";
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
@@ -88,7 +89,7 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     public void LoadNews(final String keyword) {
         swipeRefreshLayout.setRefreshing(true);
-        final NewsApiInterface apiInterface = RetrofitClient.getClient().create(NewsApiInterface.class);
+        final NewsApiInterface apiInterface = RetrofitClient.getNewsClient(BASE_URL_NEWS).create(NewsApiInterface.class);
         String country = Utils.getCountry();
         Call<NewsSource> call = apiInterface.getNews(country, API_KEY);
         call.enqueue(new Callback<NewsSource>() {

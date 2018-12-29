@@ -143,7 +143,12 @@ public class HomeActivity extends AppCompatActivity implements DuoMenuView.OnMen
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                loadSearchInfoActivity(query);
+                if (query.isEmpty()){
+                    Toast.makeText(HomeActivity.this, "You Insert Nothing...", Toast.LENGTH_SHORT).show();
+                }else {
+                    loadSearchInfoActivity(query);
+                }
+
 //                if (query.length() > 2) {
 //                    //onLoadingSwipeRefresh(query);
 //                    Toast.makeText(HomeActivity.this, query, Toast.LENGTH_LONG).show();

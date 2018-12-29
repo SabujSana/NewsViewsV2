@@ -46,7 +46,7 @@ public class AboutFragment extends Fragment {
         AnimatedColorSpan span = new AnimatedColorSpan(getActivity());
         final SpannableString spannableString = new SpannableString(text);
         int start = 0;
-        int end = text.length() - 1;
+        int end = text.length();
         spannableString.setSpan(span, start, end, 0);
 
         ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(
