@@ -103,9 +103,9 @@ public class HomeActivity extends AppCompatActivity implements DuoMenuView.OnMen
             case 2:
                 exitFromApp();
                 break;
-                default:
-                    Toast.makeText(this, String.valueOf(position) , Toast.LENGTH_SHORT).show();
-                    break;
+            default:
+                Toast.makeText(this, String.valueOf(position), Toast.LENGTH_SHORT).show();
+                break;
         }
         mViewHolder.mDuoDrawerLayout.closeDrawer();
     }
@@ -143,9 +143,11 @@ public class HomeActivity extends AppCompatActivity implements DuoMenuView.OnMen
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                if (query.length() > 2) {
-                    //onLoadingSwipeRefresh(query);
-                }
+                loadSearchInfoActivity(query);
+//                if (query.length() > 2) {
+//                    //onLoadingSwipeRefresh(query);
+//                    Toast.makeText(HomeActivity.this, query, Toast.LENGTH_LONG).show();
+//                }
                 return false;
             }
 
@@ -157,5 +159,17 @@ public class HomeActivity extends AppCompatActivity implements DuoMenuView.OnMen
         });
         searchMenuItem.getIcon().setVisible(false, false);
         return true;
+    }
+
+    private void loadSearchInfoActivity(String query) {
+        Intent intent = new Intent(HomeActivity.this, SearchInfoActivity.class);
+        intent.putExtra("query", query);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        exitFromApp();
     }
 }
