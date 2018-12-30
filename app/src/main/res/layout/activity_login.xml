@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:descendantFocusability="beforeDescendants"
+    android:background="@drawable/login_background"
     android:focusableInTouchMode="true">
 
     <View
@@ -14,7 +15,7 @@
     <ScrollView
         android:id="@+id/ScrollView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="200dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/view"
@@ -22,9 +23,9 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
-        android:layout_marginTop="150dp"
-        android:background="#fff"
-        android:padding="25dp">
+        android:layout_marginTop="180dp"
+        android:background="#b5fd50"
+        android:padding="10dp">
 
         <RelativeLayout
             android:layout_width="fill_parent"
@@ -36,9 +37,9 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:text="Login"
-                android:padding="10dp"
+
                 android:textStyle="bold"
-                android:textColor="#0a9df9"
+                android:textColor="#3a71f2"
                 android:textSize="30sp" />
 
             <com.facebook.login.widget.LoginButton xmlns:fb="http://schemas.android.com/apk/res-auto"
