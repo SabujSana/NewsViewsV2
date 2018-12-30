@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.greendreamlimited.newsviewsv2.R;
@@ -143,9 +144,9 @@ public class HomeActivity extends AppCompatActivity implements DuoMenuView.OnMen
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                if (query.isEmpty()){
+                if (query.isEmpty()) {
                     Toast.makeText(HomeActivity.this, "You Insert Nothing...", Toast.LENGTH_SHORT).show();
-                }else {
+                } else {
                     loadSearchInfoActivity(query);
                 }
 
@@ -164,6 +165,15 @@ public class HomeActivity extends AppCompatActivity implements DuoMenuView.OnMen
         });
         searchMenuItem.getIcon().setVisible(false, false);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.logout) {
+            startActivity(new Intent(HomeActivity.this, LoginActivity.class));
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void loadSearchInfoActivity(String query) {
