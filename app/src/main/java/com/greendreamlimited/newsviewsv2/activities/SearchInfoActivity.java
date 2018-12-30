@@ -12,19 +12,22 @@ import com.greendreamlimited.newsviewsv2.api.NumbersApiInterface;
 import com.greendreamlimited.newsviewsv2.api.RetrofitClient;
 import com.greendreamlimited.newsviewsv2.api.RetrofitNumbersClient;
 
+import java.io.IOException;
+
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SearchInfoActivity extends AppCompatActivity {
     TextView tvSearchInfo;
-    private static final String BASE_URL_NUMBERS = "https://numbersapi.com/";
+    private static final String BASE_URL_NUMBERS = "http://numbersapi.com";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_info);
-        tvSearchInfo = findViewById(R.id.tv_search_info);
+        tvSearchInfo = findViewById(R.id.tv_search_information);
         String queryText = getIntent().getStringExtra("query");
         if (queryText.contains("/")) {
             loadDateData(queryText);
@@ -33,17 +36,24 @@ public class SearchInfoActivity extends AppCompatActivity {
         }
     }
 
-    private void loadNumberData(String queryText) {
-        NumbersApiInterface apiInterface = RetrofitNumbersClient.getNumbersClient(BASE_URL_NUMBERS).create(NumbersApiInterface.class);
-        Call<String> call = apiInterface.getNumberInfo(queryText);
-        call.enqueue(new Callback<String>() {
+    private void loadNumberData(String query) {
+       final NumbersApiInterface apiInterface = RetrofitNumbersClient.getNumbersClient(BASE_URL_NUMBERS).create(NumbersApiInterface.class);
+        Call<ResponseBody> call = apiInterface.getNumberInfo(query);
+        call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                tvSearchInfo.setText(response.toString());
-            }
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                //NumberDate numberInfo=new NumberDate();
+                if (response.body()!=null){
+                    try {
+                        tvSearchInfo.setText(response.body().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                }
 
             @Override
-            public void onFailure(Call<String> call, Throwable t) {
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
 
             }
         });
@@ -52,15 +62,21 @@ public class SearchInfoActivity extends AppCompatActivity {
 
     private void loadDateData(String queryText) {
         NumbersApiInterface apiInterface = RetrofitNumbersClient.getNumbersClient(BASE_URL_NUMBERS).create(NumbersApiInterface.class);
-        Call<String> call = apiInterface.getDateInfo(queryText);
-        call.enqueue(new Callback<String>() {
+        Call<ResponseBody> call = apiInterface.getDateInfo(queryText);
+        call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                tvSearchInfo.setText(response.toString());
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.body()!=null){
+                    try {
+                        tvSearchInfo.setText(response.body().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
 
             @Override
-            public void onFailure(Call<String> call, Throwable t) {
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
 
             }
         });
