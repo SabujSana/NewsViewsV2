@@ -15,6 +15,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.util.TypedValue;
@@ -23,6 +24,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.greendreamlimited.newsviewsv2.Models.NewsSource.Article;
@@ -52,6 +55,7 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private NewsViewAdapter newsViewAdapter;
     private String TAG = HomeActivity.class.getSimpleName();
     private SwipeRefreshLayout swipeRefreshLayout;
+    private Switch switchGridLinear;
 
     @Nullable
     @Override
@@ -64,6 +68,7 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private void initialization(View view) {
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
         recyclerView = view.findViewById(R.id.rv_news_list);
+        switchGridLinear = view.findViewById(R.id.switch_grid_linear);
     }
 
     @Override
@@ -73,21 +78,43 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
 
-        layoutManager = new GridLayoutManager(getActivity(), 2);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setNestedScrollingEnabled(false);
 
         onLoadingSwipeRefresh("");
+        getGridList();
+        LoadNews();
+        switchGridLinear.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    getLinearList();
+                    LoadNews();
+                } else {
+                    getGridList();
+                    LoadNews();
+                }
+            }
+        });
     }
 
-    private int dpToPx(int dp) {
-        Resources resources = getResources();
-        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, resources.getDisplayMetrics()));
+    private void getLinearList() {
+        layoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(layoutManager);
     }
 
-    public void LoadNews(final String keyword) {
+    private void getGridList() {
+        layoutManager = new GridLayoutManager(getActivity(), 2);
+        recyclerView.setLayoutManager(layoutManager);
+        //recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), false));
+       // recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setNestedScrollingEnabled(false);
+    }
+
+//    private int dpToPx(int dp) {
+//        Resources resources = getResources();
+//        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, resources.getDisplayMetrics()));
+//    }
+
+    public void LoadNews() {
         swipeRefreshLayout.setRefreshing(true);
         final NewsApiInterface apiInterface = RetrofitClient.getNewsClient(BASE_URL_NEWS).create(NewsApiInterface.class);
         String country = Utils.getCountry();
@@ -158,7 +185,7 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     @Override
     public void onRefresh() {
-        LoadNews("");
+        LoadNews();
     }
 
     private void onLoadingSwipeRefresh(final String keyword) {
@@ -166,7 +193,7 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 new Runnable() {
                     @Override
                     public void run() {
-                        LoadNews(keyword);
+                        LoadNews();
                     }
                 }
         );
