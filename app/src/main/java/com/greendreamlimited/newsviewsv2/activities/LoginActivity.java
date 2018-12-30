@@ -20,6 +20,7 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.greendreamlimited.newsviewsv2.R;
+import com.greendreamlimited.newsviewsv2.utils.SharedPreferenceManager;
 
 public class LoginActivity extends AppCompatActivity {
     private static final int REQUEST_READ_CONTACTS = 0;
@@ -30,12 +31,14 @@ public class LoginActivity extends AppCompatActivity {
     GoogleSignInOptions gso;
     GoogleSignInClient mGoogleSignInClient;
     GoogleSignInAccount account;
+    SharedPreferenceManager sharedPreferenceManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_login);
+        sharedPreferenceManager = new SharedPreferenceManager(LoginActivity.this);
         initialization();
         fbLogin();
         googleSignin();
@@ -62,7 +65,9 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 Toast.makeText(getApplicationContext(), "Login Successfully", Toast.LENGTH_LONG).show();
+                sharedPreferenceManager.setIsLoggedIn(true);
                 startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                finish();
             }
 
             @Override
@@ -84,20 +89,22 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        callbackManager.onActivityResult(requestCode,resultCode,data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode==SIGNIN_REQUEST_CODE){
-            Task<GoogleSignInAccount> task=GoogleSignIn.getSignedInAccountFromIntent(data);
+        if (requestCode == SIGNIN_REQUEST_CODE) {
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             handleSigninResult(task);
             Toast.makeText(getApplicationContext(), "Sign In Successfully", Toast.LENGTH_LONG).show();
+            sharedPreferenceManager.setIsLoggedIn(true);
             startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+            finish();
         }
     }
 
     private void handleSigninResult(Task<GoogleSignInAccount> completedTask) {
         try {
-             account=completedTask.getResult(ApiException.class);
+            account = completedTask.getResult(ApiException.class);
         } catch (ApiException e) {
             e.printStackTrace();
         }

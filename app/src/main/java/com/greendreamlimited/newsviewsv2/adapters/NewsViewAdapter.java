@@ -74,7 +74,7 @@ public class NewsViewAdapter extends RecyclerView.Adapter<NewsViewAdapter.NewsVi
                 })
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(holder.imageView);
-        holder.tvAuthor.setText(article.getAuthor());
+      //  holder.tvAuthor.setText(article.getAuthor());
         holder.tvTitle.setText(article.getTitle());
         holder.tvDesc.setText(article.getDescription());
         holder.tvPublish.setText(Utils.DateFormat(article.getPublishedAt()));
@@ -105,7 +105,7 @@ public class NewsViewAdapter extends RecyclerView.Adapter<NewsViewAdapter.NewsVi
             imageView = itemView.findViewById(R.id.iv_img);
             tvTitle = itemView.findViewById(R.id.tv_title);
             tvDesc = itemView.findViewById(R.id.tv_desc);
-            tvAuthor = itemView.findViewById(R.id.tv_news_author);
+           // tvAuthor = itemView.findViewById(R.id.tv_news_author);
             tvPublish = itemView.findViewById(R.id.tv_publish_date);
             tvSource = itemView.findViewById(R.id.tv_source);
             // tvTime = itemView.findViewById(R.id.tv_time);

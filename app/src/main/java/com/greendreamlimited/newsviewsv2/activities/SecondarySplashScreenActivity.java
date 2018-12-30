@@ -28,13 +28,18 @@ public class SecondarySplashScreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_secondary_splash_screen);
         ivSplash = findViewById(R.id.iv_splash_git);
         Ion.with(ivSplash).load("http://supdogs.com/wp-content/themes/resto/assets/images/load.gif");
-        if(!preferenceManager.isFirstTimeLaunch()){
+        if (!preferenceManager.isFirstTimeLaunch()) {
             handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    startActivity(new Intent(SecondarySplashScreenActivity.this, LoginActivity.class));
-                    finish();
+                    if (preferenceManager.getIsLoggedIn()) {
+                        startActivity(new Intent(SecondarySplashScreenActivity.this, HomeActivity.class));
+                        finish();
+                    } else {
+                        startActivity(new Intent(SecondarySplashScreenActivity.this, LoginActivity.class));
+                        finish();
+                    }
                 }
             }, 3000);
         }

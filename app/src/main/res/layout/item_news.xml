@@ -15,7 +15,7 @@
         <ImageView
             android:id="@+id/iv_img"
             android:layout_width="match_parent"
-            android:layout_height="120dp"
+            android:layout_height="150dp"
             android:scaleType="centerCrop"
             android:transitionName="img"
             tools:ignore="UnusedAttribute" />
@@ -35,23 +35,22 @@
             android:layout_marginTop="70dp" />
 
 
-
         <FrameLayout
             android:id="@+id/layout_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/iv_img"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="10dp"
             android:layout_marginTop="-30dp"
             android:background="@drawable/round_white"
             android:padding="2dp">
 
             <!--<ImageView-->
-                <!--android:layout_width="20dp"-->
-                <!--android:layout_height="20dp"-->
-                <!--android:layout_marginLeft="5dp"-->
-                <!--android:layout_marginRight="5dp"-->
-                <!--android:src="@drawable/ic_date" />-->
+            <!--android:layout_width="20dp"-->
+            <!--android:layout_height="20dp"-->
+            <!--android:layout_marginLeft="5dp"-->
+            <!--android:layout_marginRight="5dp"-->
+            <!--android:src="@drawable/ic_date" />-->
 
             <TextView
                 android:id="@+id/tv_publish_date"
@@ -59,34 +58,32 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:textSize="12sp"
                 android:text="24 December 2018"
-                android:textColor="#606060" />
+                android:textColor="#606060"
+                android:textSize="12sp" />
         </FrameLayout>
-        <TextView
-            android:id="@+id/tv_news_author"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="160dp"
-            android:layout_marginTop="3dp"
-            android:drawablePadding="10dp"
-            android:ellipsize="end"
-            android:gravity="bottom"
-            android:layout_below="@+id/iv_img"
-            android:singleLine="true"
-            android:text="Author"
-            android:textColor="#111"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+        <!--<TextView-->
+        <!--android:id="@+id/tv_news_author"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="30dp"-->
+        <!--android:layout_marginLeft="15dp"-->
+        <!--android:layout_marginRight="160dp"-->
+        <!--android:ellipsize="end"-->
+        <!--android:gravity="bottom"-->
+        <!--android:layout_below="@+id/iv_img"-->
+        <!--android:singleLine="true"-->
+        <!--android:text="Author"-->
+        <!--android:textColor="#111"-->
+        <!--android:textSize="18sp"-->
+        <!--android:textStyle="bold" />-->
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_news_author"
+            android:layout_below="@+id/iv_img"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="2dp"
             android:fontFamily="sans-serif-light"
             android:text="Title"
             android:textColor="@color/colorTextTitle"
@@ -96,45 +93,43 @@
         <TextView
             android:id="@+id/tv_desc"
             android:layout_width="wrap_content"
-            android:layout_height="20dp"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/tv_title"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
-            android:layout_marginTop="5dp"
-            android:text="Desc" />
+            android:text="Desc"
+            android:textSize="10dp" />
 
         <TextView
             android:id="@+id/tv_source"
             android:layout_width="wrap_content"
             android:layout_height="20dp"
             android:layout_below="@+id/tv_desc"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
-            android:drawablePadding="5dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="10dp"
             android:ellipsize="end"
             android:fontFamily="sans-serif-light"
             android:maxLines="1"
             android:singleLine="true"
             android:text="Spurce"
             android:textColor="@color/colorTextTitle"
-            android:textSize="14sp"
+            android:textSize="13sp"
             android:textStyle="bold" />
 
         <!--<TextView-->
-            <!--android:id="@+id/tv_time"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="20dp"-->
-            <!--android:layout_below="@+id/tv_desc"-->
-            <!--android:layout_marginBottom="10dp"-->
-            <!--android:layout_marginTop="5dp"-->
-            <!--android:layout_toRightOf="@+id/tv_source"-->
-            <!--android:drawablePadding="10dp"-->
-            <!--android:ellipsize="end"-->
-            <!--android:maxLines="1"-->
-            <!--android:singleLine="true"-->
-            <!--android:text="Time"-->
-            <!--android:textSize="14sp" />-->
+        <!--android:id="@+id/tv_time"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="20dp"-->
+        <!--android:layout_below="@+id/tv_desc"-->
+        <!--android:layout_marginBottom="10dp"-->
+        <!--android:layout_marginTop="5dp"-->
+        <!--android:layout_toRightOf="@+id/tv_source"-->
+        <!--android:drawablePadding="10dp"-->
+        <!--android:ellipsize="end"-->
+        <!--android:maxLines="1"-->
+        <!--android:singleLine="true"-->
+        <!--android:text="Time"-->
+        <!--android:textSize="14sp" />-->
     </RelativeLayout>
 </android.support.v7.widget.CardView>
