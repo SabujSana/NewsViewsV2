@@ -38,17 +38,20 @@ public class SplashScreenActivity extends AppCompatActivity {
         preferenceManager = new SharedPreferenceManager(this);
 
         if (Build.VERSION.SDK_INT >= 21) {
-            getWindow().getDecorView().setSystemUiVisibility(
-                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_FULLSCREEN
-            );
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_FULLSCREEN);
         }
         setContentView(R.layout.activity_splash_screen);
 
-        initialization();
+        viewPager = findViewById(R.id.view_pager);
+        dotsLayout = findViewById(R.id.layoutDots);
+        btnSkip = findViewById(R.id.btn_skip);
+        btnNext = findViewById(R.id.btn_next);
+
         layouts = new int[]{
                 R.layout.splash_screen_1,
                 R.layout.splash_screen_2,
-                R.layout.splash_screen_3};
+                R.layout.splash_screen_3,
+        };
 
         addBottomDots(0);
         changeStatusBarColor();
@@ -80,8 +83,26 @@ public class SplashScreenActivity extends AppCompatActivity {
     private int getItem(int i) {
         return viewPager.getCurrentItem() + i;
     }
+    private void addBottomDots(int currentPage) {
+        dots = new TextView[layouts.length];
 
-    private void launchLoginActivity() {
+        int[] colorsActive = getResources().getIntArray(R.array.array_dot_active);
+        int[] colorsInActive = getResources().getIntArray(R.array.array_dot_inactive);
+
+        dotsLayout.removeAllViews();
+
+        for (int i = 0; i < dots.length; i++) {
+            dots[i] = new TextView(this);
+            dots[i].setText(Html.fromHtml("&#8226;"));
+            dots[i].setTextSize(35);
+            dots[i].setTextColor(colorsInActive[currentPage]);
+            dotsLayout.addView(dots[i]);
+        }
+
+        if (dots.length > 0)
+            dots[currentPage].setTextColor(colorsActive[currentPage]);
+    }
+        private void launchLoginActivity() {
         preferenceManager.setIsFirstTimeLaunch(false);
         startActivity(new Intent(SplashScreenActivity.this, LoginActivity.class));
         finish();
@@ -113,6 +134,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         }
     };
 
+
     private void changeStatusBarColor() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
@@ -121,34 +143,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         }
     }
 
-    private void addBottomDots(int currentPage) {
-        dots = new TextView[layouts.length];
-
-        int[] colorsActive = getResources().getIntArray(R.array.array_dot_active);
-        int[] colorsInActive = getResources().getIntArray(R.array.array_dot_inactive);
-
-        dotsLayout.removeAllViews();
-
-        for (int i = 0; i < dots.length; i++) {
-            dots[i] = new TextView(this);
-            dots[i].setText(Html.fromHtml("&#8226;"));
-            dots[i].setTextSize(35);
-            dots[i].setTextColor(colorsInActive[currentPage]);
-            dotsLayout.addView(dots[i]);
-        }
-
-        if (dots.length > 0)
-            dots[currentPage].setTextColor(colorsActive[currentPage]);
-    }
-
-    private void initialization() {
-        viewPager = findViewById(R.id.view_pager);
-        dotsLayout = findViewById(R.id.layoutDots);
-        btnSkip = findViewById(R.id.btn_skip);
-        btnNext = findViewById(R.id.btn_next);
-    }
-
-    public class MyViewPagerAdapter extends PagerAdapter {
+    public class MyViewPagerAdapter extends PagerAdapter{
         private LayoutInflater layoutInflater;
 
         public MyViewPagerAdapter() {
@@ -157,8 +152,13 @@ public class SplashScreenActivity extends AppCompatActivity {
         @NonNull
         @Override
         public Object instantiateItem(@NonNull ViewGroup container, int position) {
-            layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View view = layoutInflater.inflate(layouts[position], container, false);
+
+            layoutInflater=(LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+            View view=layoutInflater.inflate(layouts[position],container,false);
+            container.addView(view);
+
+
             return view;
         }
 
@@ -169,12 +169,12 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         @Override
         public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-            return view == object;
+            return view==object;
         }
 
         @Override
         public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-            View view = (View) object;
+            View view=(View) object;
             container.removeView(view);
         }
     }
