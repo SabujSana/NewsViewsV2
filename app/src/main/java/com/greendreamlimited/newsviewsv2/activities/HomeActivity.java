@@ -3,6 +3,7 @@ package com.greendreamlimited.newsviewsv2.activities;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -14,10 +15,22 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginManager;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.greendreamlimited.newsviewsv2.R;
 import com.greendreamlimited.newsviewsv2.adapters.MenuAdapter;
 import com.greendreamlimited.newsviewsv2.fragments.AboutFragment;
 import com.greendreamlimited.newsviewsv2.fragments.HomeFragment;
+import com.greendreamlimited.newsviewsv2.utils.SharedPreferenceManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,12 +44,15 @@ public class HomeActivity extends AppCompatActivity implements DuoMenuView.OnMen
     private MenuAdapter mMenuAdapter;
     private ViewHolder mViewHolder;
     public ArrayList<String> mTitles = new ArrayList<>();
-
+    GoogleSignInClient mGoogleSignInClient;
+    SharedPreferenceManager preferenceManager;
+    GoogleApiClient mGoogleApiClient;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_home);
-
+        preferenceManager = new SharedPreferenceManager(this);
         mTitles = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.menuOptions)));
 
         mViewHolder = new ViewHolder();
@@ -170,10 +186,47 @@ public class HomeActivity extends AppCompatActivity implements DuoMenuView.OnMen
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.logout) {
+            setLogout();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void setLogout() {
+        preferenceManager.setIsLoggedIn(false);
+        fbLogout();
+        gmailLogout();
+    }
+
+    @Override
+    protected void onStart() {
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+         mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+        mGoogleApiClient.connect();
+        super.onStart();
+    }
+
+    private void gmailLogout() {
+       Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
+           @Override
+           public void onResult(@NonNull Status status) {
+               Toast.makeText(HomeActivity.this, "Sign Out Successfully", Toast.LENGTH_SHORT).show();
+               startActivity(new Intent(HomeActivity.this, LoginActivity.class));
+               finish();
+           }
+       });
+    }
+
+    private void fbLogout() {
+        if (AccessToken.getCurrentAccessToken() != null) {
+            LoginManager.getInstance().logOut();
+            Toast.makeText(HomeActivity.this, "Logout Successfully", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(HomeActivity.this, LoginActivity.class));
             finish();
         }
-        return super.onOptionsItemSelected(item);
     }
 
     private void loadSearchInfoActivity(String query) {

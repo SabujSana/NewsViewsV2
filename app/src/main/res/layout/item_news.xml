@@ -97,6 +97,7 @@
             android:layout_below="@+id/tv_title"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
+            android:maxLines="2"
             android:text="Desc"
             android:textSize="10dp" />
 
@@ -110,7 +111,6 @@
             android:layout_marginRight="10dp"
             android:ellipsize="end"
             android:fontFamily="sans-serif-light"
-            android:maxLines="1"
             android:singleLine="true"
             android:text="Spurce"
             android:textColor="@color/colorTextTitle"
