@@ -156,7 +156,7 @@ public class HomeActivity extends AppCompatActivity implements DuoMenuView.OnMen
         android.view.MenuItem searchMenuItem = menu.findItem(R.id.action_search);
 
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        searchView.setQueryHint("Search Latest News.....");
+        searchView.setQueryHint("Number or Date");
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
